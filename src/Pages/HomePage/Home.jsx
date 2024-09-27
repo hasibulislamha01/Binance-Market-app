@@ -1,12 +1,33 @@
 import { useState } from "react";
-import SelectCoin from "../../Components/HomePageComponents/SelectCoin";
-import useWebSocketConnection from "../../CustomHooks/useWebSocketConnection";
+import SelectOption from "../../Components/HomePageComponents/SelectOption";
 import CandlestickChart from "../../Components/HomePageComponents/CandleChart/CandleChart";
+import useWebSocketConnection from "../../CustomHooks/useWebSocketConnection";
 
+const coinOptions = [
+    { value: 'ethusdt', label: 'ETH/USDT' },
+    { value: 'bnbusdt', label: 'BNB/USDT' },
+    { value: 'dotusdt', label: 'DOT/USDT' },
+]
+
+const intervalOptions = [
+    { value: '1m', label: '1 minute' },
+    { value: '3m', label: '3 minute' },
+    { value: '5m', label: '5 minute' },
+]
 
 const Home = () => {
-    const message = useWebSocketConnection('ethusdt', '1m')
-    const [firstCoin, setFirstCoin] = useState(null)
+
+
+    const [selectedCoin, setSelectedCoin] = useState('ethusdt')
+    const [interval, setInterval] = useState('1m')
+    const [chartData, setChartData] = useState({});
+    
+    const updateChartData = (coin, data) => {
+        setChartData((prevData) => ({
+            ...prevData,
+            [coin]: data, // Update data for the specific coin
+        }));
+    };
 
 
 
@@ -15,13 +36,24 @@ const Home = () => {
         <div className="container mx-auto text-center pt-12">
             <h1 className="text-xl md:text-3xl font-bold ">Binance Market </h1>
 
-            <div className="">
-                <SelectCoin
-                    placeholder='Select first coin'
-                    changeHandler={setFirstCoin}
+            <div className="flex flex-col md:flex-row items-center justify-center border border-red-300">
+                <SelectOption
+                    placeholder='Select a coin'
+                    changeHandler={setSelectedCoin}
+                    options={coinOptions}
                 />
-                <CandlestickChart/>
+                <SelectOption
+                    changeHandler={setInterval}
+                    options={intervalOptions}
+                    placeholder='Select an interval'
+                />
             </div>
+            <CandlestickChart
+                selectedCoin={selectedCoin}
+                interval={interval}
+                chartData={chartData[selectedCoin] || []} // Pass data for the selected coin
+                updateChartData={updateChartData} // Pass the update function
+            />
         </div>
     );
 };

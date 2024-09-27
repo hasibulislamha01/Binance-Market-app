@@ -4,50 +4,52 @@ const useWebSocketConnection = (symbol, interval) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const socketRef = useRef(null);
+  const firstCandlestickCaptured = useRef(false); 
 
   useEffect(() => {
-    // Create the WebSocket URL
     const wsUrl = `wss://stream.binance.com:9443/ws/${symbol}@kline_${interval}`;
     console.log("Connecting to WebSocket:", wsUrl);
 
-    // Open a WebSocket connection
     socketRef.current = new WebSocket(wsUrl);
 
-    // Event: Connection opened
     socketRef.current.onopen = () => {
       console.log('WebSocket connection opened');
     };
 
-    // Event: Message received
     socketRef.current.onmessage = (event) => {
       const message = JSON.parse(event.data);
-        console.log('Received WebSocket data:', message);
       const candlestick = message.k;
+
+      console.log('Received message:', message); // Log the entire message
+      const intervalIsComplete = candlestick.x; // Check if the candlestick is closed
+
       const open = candlestick.o;
       const high = candlestick.h;
       const low = candlestick.l;
       const close = candlestick.c;
       const volume = candlestick.v;
-      const isFinal = candlestick.x; // true if the candlestick is complete
 
-      const keyInfo = {open, high, low, close, volume, isFinal}
-      // console.log(`Open: ${open}, High: ${high}, Low: ${low}, Close: ${close}, Volume: ${volume}, Final: ${isFinal}`);
+      const keyInfo = { open, high, low, close, volume, intervalIsComplete };
 
-      setData(keyInfo);
+      if (!firstCandlestickCaptured.current) {
+        console.log('Captured first candlestick:', keyInfo);
+        setData(keyInfo);
+        firstCandlestickCaptured.current = true;
+      }
+
+      if (intervalIsComplete) {
+        console.log('Candlestick is complete:', keyInfo);
+        setData(keyInfo);
+      } else {
+        console.log('Candlestick is not complete:', keyInfo);
+      }
     };
 
-    // Event: Connection closed
-    socketRef.current.onclose = (event) => {
-      console.log('WebSocket connection closed', event);
-    };
-
-    // Event: Error occurred
     socketRef.current.onerror = (event) => {
       console.error('WebSocket error:', event);
       setError(event);
     };
 
-    // Cleanup on unmount
     return () => {
       if (socketRef.current) {
         socketRef.current.close();

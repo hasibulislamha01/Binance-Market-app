@@ -1,12 +1,8 @@
 import Select from 'react-select'
 import PropTypes from 'prop-types'
 
-const options = [
-    { value: 'ethusdt', label: 'ETH/USDT' },
-    { value: 'bnbusdt', label: 'BNB/USDT' },
-    { value: 'dotusdt', label: 'DOT/USDT' },
-]
-const SelectCoin = ({placeholder, changeHandler}) => {
+
+const SelectOption = ({placeholder, changeHandler, options}) => {
 
     const handleChange = (option) => {
         changeHandler(option?.value)
@@ -17,14 +13,15 @@ const SelectCoin = ({placeholder, changeHandler}) => {
             options={options}
             placeholder={placeholder}
             onChange={handleChange}
-            className='my-6 w-[300px] mx-auto'
+            className='my-6 w-[300px] mx-auto border border-red-400'
         />
     );
 };
 
 
-SelectCoin.propTypes = {
+SelectOption.propTypes = {
     placeholder: PropTypes.string,
-    changeHandler: PropTypes.func
+    changeHandler: PropTypes.func,
+    options: PropTypes.array,
 }
-export default SelectCoin;
+export default SelectOption;
