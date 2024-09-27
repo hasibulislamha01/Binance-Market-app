@@ -21,8 +21,19 @@ const useWebSocketConnection = (symbol, interval) => {
     // Event: Message received
     socketRef.current.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      console.log('Received WebSocket data:', message);
-      setData(message);
+        console.log('Received WebSocket data:', message);
+      const candlestick = message.k;
+      const open = candlestick.o;
+      const high = candlestick.h;
+      const low = candlestick.l;
+      const close = candlestick.c;
+      const volume = candlestick.v;
+      const isFinal = candlestick.x; // true if the candlestick is complete
+
+      const keyInfo = {open, high, low, close, volume, isFinal}
+      // console.log(`Open: ${open}, High: ${high}, Low: ${low}, Close: ${close}, Volume: ${volume}, Final: ${isFinal}`);
+
+      setData(keyInfo);
     };
 
     // Event: Connection closed
