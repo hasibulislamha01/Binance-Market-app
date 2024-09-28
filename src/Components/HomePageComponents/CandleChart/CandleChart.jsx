@@ -19,6 +19,20 @@ const CandlestickChart = ({ selectedCoin, interval, chartData, updateChartData }
     return storedData ? JSON.parse(storedData) : null;
   };
 
+  // Calculate the min and max for the y-axis dynamically based on chart data
+  const calculateYRange = (data) => {
+    if (!data || data.length === 0) return { min: 0, max: 1 };
+    
+    const prices = data.flatMap((candle) => candle.y);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+    const padding = (max - min) * 0.1; // Add 10% padding to the range
+    return {
+      min: min - padding,
+      max: max + padding,
+    };
+  };
+
   // When the component mounts or the selected coin changes, reset the chart data
   useEffect(() => {
     // Clear the local chart data to reset the chart for a new coin
@@ -69,6 +83,9 @@ const CandlestickChart = ({ selectedCoin, interval, chartData, updateChartData }
     }
   }, [localChartData, selectedCoin, updateChartData]);
 
+  // Calculate the y-axis range dynamically based on localChartData
+  const yRange = useMemo(() => calculateYRange(localChartData), [localChartData]);
+
   const chartOptions = useMemo(() => ({
     chart: {
       type: 'candlestick',
@@ -98,6 +115,8 @@ const CandlestickChart = ({ selectedCoin, interval, chartData, updateChartData }
       },
     },
     yaxis: {
+      min: yRange.min, // Dynamically set the y-axis min
+      max: yRange.max, // Dynamically set the y-axis max
       forceNiceScale: true,
       tooltip: {
         enabled: true,
@@ -109,7 +128,7 @@ const CandlestickChart = ({ selectedCoin, interval, chartData, updateChartData }
         },
       },
     },
-  }), [selectedCoin, interval]);
+  }), [selectedCoin, interval, yRange]);
 
   return (
     <div>
