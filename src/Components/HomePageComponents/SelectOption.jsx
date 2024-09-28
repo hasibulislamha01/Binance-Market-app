@@ -13,7 +13,7 @@ const SelectOption = ({placeholder, changeHandler, options}) => {
             options={options}
             placeholder={placeholder}
             onChange={handleChange}
-            className='my-6 w-[300px] mx-auto border border-red-400'
+            className='my-6 w-[300px]'
         />
     );
 };

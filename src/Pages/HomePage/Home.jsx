@@ -1,7 +1,6 @@
 import { useState } from "react";
 import SelectOption from "../../Components/HomePageComponents/SelectOption";
 import CandlestickChart from "../../Components/HomePageComponents/CandleChart/CandleChart";
-import useWebSocketConnection from "../../CustomHooks/useWebSocketConnection";
 
 const coinOptions = [
     { value: 'ethusdt', label: 'ETH/USDT' },
@@ -21,7 +20,7 @@ const Home = () => {
     const [selectedCoin, setSelectedCoin] = useState('ethusdt')
     const [interval, setInterval] = useState('1m')
     const [chartData, setChartData] = useState({});
-    
+
     const updateChartData = (coin, data) => {
         setChartData((prevData) => ({
             ...prevData,
@@ -33,14 +32,15 @@ const Home = () => {
 
 
     return (
-        <div className="container mx-auto text-center pt-12">
-            <h1 className="text-xl md:text-3xl font-bold ">Binance Market </h1>
+        <div className="min-h-screen container mx-auto text-center pt-12">
+            <h1 className="text-xl md:text-3xl font-bold text-amber-400">Binance Market Data</h1>
 
-            <div className="flex flex-col md:flex-row items-center justify-center border border-red-300">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
                 <SelectOption
                     placeholder='Select a coin'
                     changeHandler={setSelectedCoin}
                     options={coinOptions}
+                    
                 />
                 <SelectOption
                     changeHandler={setInterval}
