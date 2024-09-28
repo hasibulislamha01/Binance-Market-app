@@ -1,8 +1,14 @@
-# React + Tailwind + Daisyui + React-router
+# Binance Market App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project aims to build a platform where real time market data about crypto currency is displayed using candle-stick bar chart.
 
-Currently, two official plugins are available:
+### How to run in your local browser?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- copy the url of the repo
+- selelct a directory in your computer using command prompt
+- use the following command:  git clone url_you_copied
+- open the directory where you cloned the repo
+- run the command: npm run dev
+- the project should start in your local server (normally localhost:5173)
+- the project will be running in the port.
+
